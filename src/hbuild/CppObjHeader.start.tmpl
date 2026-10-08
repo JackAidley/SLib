@@ -13,18 +13,22 @@
 
 #include <vector>
 #include <memory>
+${ExtraStdIncludes}
 using namespace std;
 
 #include <twine.h>
-#include <Date.h>
 #include <xmlinc.h>
 #include <sptr.h>
+${ExtraSLibIncludes}
 using namespace SLib;
 
-#include "IOConn.h"
-#include "OdbcObj.h"
-#include "OdbcDate.h"
-#include "SqlDB.h"
+// Forward declare IOConn and OdbcObj
+namespace Helix { namespace Glob { 
+	class IOConn;
+	class OdbcObj;
+} }
+
+//#include "OdbcObj.h"
 #include "cJSON.h"
 using namespace Helix::Glob;
 

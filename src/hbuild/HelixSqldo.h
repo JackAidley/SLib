@@ -11,6 +11,8 @@
 #ifndef HelixSqldo_H
 #define HelixSqldo_H
 
+#include <set>
+
 #include <twine.h>
 #include <Date.h>
 #include <xmlinc.h>
@@ -138,6 +140,7 @@ class DLLEXPORT HelixSqldo
 		vector< HelixSqldoSearchFunction > m_searchs;
 		vector< HelixSqldoParam > m_consts;
 		map< twine, twine > m_parms;
+		set<twine> m_used_types;
 		
 		HelixFSFolder* m_folder;
 		HelixFSFile* m_file;

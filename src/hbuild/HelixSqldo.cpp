@@ -274,15 +274,18 @@ void HelixSqldo::ReadSqldo()
 	}
 
 	// Gather up our list of unique input/output parameters
+	// And find out which types are used
 	for(auto& m : m_methods){
 		for(auto& p : m.inputs){
 			if(m_all_params.count( p.name ) == 0){
 				m_all_params[ p.name ] = p;
+				m_used_types.insert( p.CPPType() );
 			}
 		}
 		for(auto& p : m.outputs){
 			if(m_all_params.count( p.name ) == 0){
 				m_all_params[ p.name ] = p;
+				m_used_types.insert( p.CPPType() );
 			}
 		}
 	}
@@ -457,6 +460,18 @@ map< twine, twine >& HelixSqldo::BuildObjectParms()
 	if(m_searchs.size() > 0){
 		childObjectIncludes.append( "\n#include \"SearchField.h\"\nusing namespace Helix::Logic::util;\n\n" );
 	}
+
+	// Build extra std includes if needed
+	m_parms["ExtraStdIncludes"] = "";
+	if (!m_maps.empty())
+		m_parms["ExtraStdIncludes"] = "\n#include <map>\n";
+
+	// Build extra includes needed for some types of parameter
+	m_parms["ExtraSLibIncludes"] = "";
+	if (m_used_types.find("Date") != m_used_types.end()) 
+		m_parms["ExtraSLibIncludes"] += "\n#include <Date.h>\n";
+	if (m_used_types.find("MemBuf") != m_used_types.end()) 
+		m_parms["ExtraSLibIncludes"] += "\n#include <MemBuf.h>\n";
 
 	m_parms[ "ChildObjectIncludes" ] = childObjectIncludes;
 	m_parms[ "DefineDataMembers" ] = defineDataMembers;
