@@ -34,22 +34,13 @@ HelixWorker& HelixWorker::getInstance()
 		m_helix_worker = new HelixWorker();
 
 		// Start up 10 Compile threads
-		std::thread t0( HelixWorker::CompileThread ); t0.detach();
-		std::thread t1( HelixWorker::CompileThread ); t1.detach();
-		std::thread t2( HelixWorker::CompileThread ); t2.detach();
-		std::thread t3( HelixWorker::CompileThread ); t3.detach();
-		std::thread t4( HelixWorker::CompileThread ); t4.detach();
-		std::thread t5( HelixWorker::CompileThread ); t5.detach();
-		std::thread t6( HelixWorker::CompileThread ); t6.detach();
-		std::thread t7( HelixWorker::CompileThread ); t7.detach();
-		std::thread t8( HelixWorker::CompileThread ); t8.detach();
-		std::thread t9( HelixWorker::CompileThread ); t9.detach();
+		for (int i = 0; i < 16; ++i) {
+			std::thread t0( HelixWorker::CompileThread ); t0.detach();
+		}
 
-		std::thread g0( HelixWorker::GenerateThread ); g0.detach();
-		std::thread g1( HelixWorker::GenerateThread ); g1.detach();
-		std::thread g2( HelixWorker::GenerateThread ); g2.detach();
-		std::thread g3( HelixWorker::GenerateThread ); g3.detach();
-		std::thread g4( HelixWorker::GenerateThread ); g4.detach();
+		for (int i = 0; i < 8; ++i) {
+			std::thread g0( HelixWorker::GenerateThread ); g0.detach();
+		}
 	}
 
 	return *m_helix_worker;
@@ -79,9 +70,6 @@ void HelixWorker::Add(HelixCompileTask* task)
 	EnEx ee(FL, "HelixWorker::Add(HelixCompileTask* task)");
 
 	m_compile_queue.push( task );
-
-	// Sleep for a moment to allow other threads to start and work
-	Tools::msleep( 100 );
 }
 
 void HelixWorker::Add(HelixLinkTask* task)
@@ -138,8 +126,6 @@ void HelixWorker::Add(HelixGenTask* task)
 
 	m_gen_queue.push( task );
 
-	// Sleep for a moment to allow other threads to start and work
-	Tools::msleep( 100 );
 }
 
 void HelixWorker::WaitForGenerators()
