@@ -237,16 +237,16 @@ int HelixConfig::GeneratorThreads() {
 	return GetThreads("generatorThreads", 6);
 }
 
-int HelixConfig::GetThreads(const char* attribute, int default) {
+int HelixConfig::GetThreads(const char* attribute, int defaultValue) {
 	auto node = XmlHelpers::FindChild( xmlDocGetRootElement( m_config ), "BuildOptions" );
 
 	if (!node)
-		return default;
+		return defaultValue;
 	
 	twine compileThreads(node, attribute);
 	int threads = (int)compileThreads.get_int();
 
-	return (threads == 0) ? default : threads;
+	return (threads == 0) ? defaultValue : threads;
 }
 
 bool HelixConfig::UseCCache() {

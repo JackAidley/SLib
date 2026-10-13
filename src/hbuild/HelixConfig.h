@@ -102,7 +102,7 @@ class DLLEXPORT HelixConfig
 		HelixConfig& operator=(const HelixConfig& c) = delete;
 
 		// Helper function
-		int GetThreads(const char* attribute, int default);
+		int GetThreads(const char* attribute, int defaultValue);
 
 		// Our hbuild cache file
 		sptr<xmlDoc, xmlFreeDoc> m_config;
