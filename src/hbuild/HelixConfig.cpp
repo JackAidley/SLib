@@ -229,3 +229,32 @@ vector<twine> HelixConfig::ApacheLibs()
 	return ret;
 }
 
+int HelixConfig::CompileThreads() {
+	return GetThreads("compileThreads", 10);
+}
+
+int HelixConfig::GeneratorThreads() {
+	return GetThreads("generatorThreads", 6);
+}
+
+int HelixConfig::GetThreads(const char* attribute, int default) {
+	auto node = XmlHelpers::FindChild( xmlDocGetRootElement( m_config ), "BuildOptions" );
+
+	if (!node)
+		return default;
+	
+	twine compileThreads(node, attribute);
+	int threads = (int)compileThreads.get_int();
+
+	return (threads == 0) ? default : threads;
+}
+
+bool HelixConfig::UseCCache() {
+	auto node = XmlHelpers::FindChild( xmlDocGetRootElement( m_config ), "BuildOptions" );
+
+	if (!node)
+		return false;
+	
+	twine compileThreads(node, "useCCache");
+	return compileThreads.lcase() == "true";
+}
